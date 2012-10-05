@@ -76,8 +76,8 @@ if defined?(AWS)
   end
 
   def HerokuMongoBackup::remove_old_backup_files(bucket_name, files_number_to_leave)
-    object_keys = Bucket.find(bucket_name).objects.map { |o| o.key }.sort
-    (0..excess-1).each { |i| S3Object.find(object_keys[i],bucket_name).delete } if (excess = object_keys.count - files_number_to_leave) > 0
+    object_keys = ( bucket = service.buckets.find(bucket_name) ).objects.map { |o| o.key }.sort
+    (0..excess-1).each { |i| bucket.objects.find(object_keys[i]).destroy } if (excess = object_keys.count - files_number_to_leave) > 0
   end
 
 end
