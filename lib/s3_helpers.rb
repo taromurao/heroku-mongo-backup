@@ -39,7 +39,9 @@ if defined?(S3)
       return content
     end
 
-    def HerokuMongoBackup::remove_old_backup_files(files_number_to_leave)
+    def HerokuMongoBackup::remove_old_backup_files(bucket, files_number_to_leave)
+      object_keys = bucket.objects.map { |o| o.key }.sort
+      (0..excess-1).each { |i| bucket.objects.find(object_keys[i]).destroy } if (excess = object_keys.count - files_number_to_leave) > 0
     end
 
 end
